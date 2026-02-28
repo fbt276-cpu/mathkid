@@ -1,0 +1,398 @@
+<!--
+============================================================
+Nom du programme : MathKid — Page QR Code de distribution
+Auteur           : ODET François
+Société          : NEXXAT
+Copyright        : © NEXXAT - ODET François 2025
+Version          : 1.2.0
+Date de création : 2025-02-28 21:00
+Langage          : HTML5 / CSS3 / JavaScript ES2022
+Chemin du fichier: /MathKid/qrcode.html
+Sourcé par       : Claude IA
+------------------------------------------------------------
+Historique des versions :
+  v1.2.0 - 2025-02-28 - Page QR Code distribution APK GitHub
+============================================================
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MathKid — Installer l'app · NEXXAT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <!-- QR Code generator library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    /* ============================================================
+       Nom      : MathKid QR Code — Styles
+       Auteur   : ODET François | NEXXAT
+       Copyright: © NEXXAT - ODET François 2025
+       Version  : 1.2.0
+       Sourcé par : Claude IA
+    ============================================================ */
+    :root {
+      --bg:      #080814;
+      --surface: #0F0F24;
+      --card:    #161630;
+      --primary: #6C3CE1;
+      --accent:  #FFD93D;
+      --green:   #4ECB71;
+      --text:    #EEE8FF;
+      --muted:   #6B6B9A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── STARS BACKGROUND ── */
+    .stars {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(2px 2px at 40% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 55%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 65%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 90% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5%  45%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 15%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    }
+
+    /* ── GLOW ── */
+    .glow {
+      position: fixed;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,60,225,0.15) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none; z-index: 0;
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+      50%      { transform: translate(-50%,-50%) scale(1.1); opacity: 1; }
+    }
+
+    /* ── MAIN CARD ── */
+    .card {
+      position: relative; z-index: 1;
+      background: var(--card);
+      border: 1px solid rgba(108,60,225,0.3);
+      border-radius: 28px;
+      padding: 36px 32px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 24px 64px rgba(0,0,0,0.6),
+        0 0 80px rgba(108,60,225,0.15);
+      animation: cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes cardIn {
+      from { opacity:0; transform: translateY(24px) scale(0.95); }
+      to   { opacity:1; transform: none; }
+    }
+
+    /* ── HEADER ── */
+    .app-icon {
+      font-size: 64px;
+      animation: bounce 2s ease-in-out infinite;
+      display: block;
+      margin-bottom: 8px;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    .app-name {
+      font-family: 'Baloo 2', cursive;
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFD93D, #FF9F1C, #FF6B6B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .app-tagline {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .nexxat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(108,60,225,0.15);
+      border: 1px solid rgba(108,60,225,0.3);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #A89FFF;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+    }
+
+    /* ── QR CODE ── */
+    .qr-wrapper {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      display: inline-block;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .qr-wrapper::before,
+    .qr-wrapper::after {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+      border-color: var(--primary);
+      border-style: solid;
+    }
+    .qr-wrapper::before {
+      top: -2px; left: -2px;
+      border-width: 3px 0 0 3px;
+      border-radius: 4px 0 0 0;
+    }
+    .qr-wrapper::after {
+      bottom: -2px; right: -2px;
+      border-width: 0 3px 3px 0;
+      border-radius: 0 0 4px 0;
+    }
+    #qrcode { display: flex; align-items: center; justify-content: center; }
+    #qrcode canvas, #qrcode img { border-radius: 8px; }
+
+    /* ── SCAN INSTRUCTION ── */
+    .scan-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .scan-label::before,
+    .scan-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* ── STEPS ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .step-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      animation: stepIn 0.4s ease both;
+    }
+    .step-row:nth-child(1) { animation-delay: 0.1s; }
+    .step-row:nth-child(2) { animation-delay: 0.2s; }
+    .step-row:nth-child(3) { animation-delay: 0.3s; }
+    .step-row:nth-child(4) { animation-delay: 0.4s; }
+    @keyframes stepIn {
+      from { opacity:0; transform: translateX(-8px); }
+      to   { opacity:1; transform: none; }
+    }
+    .step-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #9B59E6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900;
+      flex-shrink: 0;
+    }
+    .step-text { font-size: 13px; font-weight: 700; line-height: 1.4; }
+    .step-text span { color: var(--muted); font-weight: 400; font-size: 12px; display: block; }
+
+    /* ── DOWNLOAD BUTTON ── */
+    .dl-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), #9B59E6);
+      color: white;
+      font-family: 'Baloo 2', cursive;
+      font-size: 18px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(108,60,225,0.5);
+      transition: transform .15s, box-shadow .15s;
+      margin-bottom: 12px;
+    }
+    .dl-btn:hover  { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(108,60,225,0.6); }
+    .dl-btn:active { transform: scale(0.98); }
+
+    .pwa-btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      border-radius: 16px;
+      border: 1px solid rgba(78,203,113,0.3);
+      background: rgba(78,203,113,0.08);
+      color: var(--green);
+      font-family: 'Baloo 2', cursive;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: background .2s, transform .1s;
+      margin-bottom: 20px;
+    }
+    .pwa-btn:hover  { background: rgba(78,203,113,0.15); }
+    .pwa-btn:active { transform: scale(0.98); }
+
+    /* ── FOOTER ── */
+    .footer-info {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.8;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 16px;
+    }
+    .footer-info strong { color: var(--accent); }
+
+    /* ── VERSION TAG ── */
+    .version-tag {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(255,217,61,0.1);
+      border: 1px solid rgba(255,217,61,0.2);
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="glow"></div>
+
+<div class="card">
+  <div class="version-tag">v1.2.0</div>
+
+  <span class="app-icon">🧮</span>
+  <div class="app-name">MathKid</div>
+  <div class="app-tagline">Application de calcul mental</div>
+  <div class="nexxat-badge">⚡ NEXXAT · ODET François · 2025</div>
+
+  <!-- QR CODE généré dynamiquement -->
+  <div class="qr-wrapper">
+    <div id="qrcode"></div>
+  </div>
+
+  <div class="scan-label">📱 Scanne avec ton téléphone Android</div>
+
+  <!-- ÉTAPES -->
+  <div class="steps">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text">Scanne le QR code ou clique le bouton
+        <span>Depuis ton téléphone Android</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text">Télécharge MathKid-v1.2.0.apk
+        <span>Fichier de ~3 MB</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-text">Ouvre le fichier → Installer
+        <span>Autoriser les sources inconnues si demandé</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-text">🎉 Profite de MathKid !
+        <span>Fonctionne même sans internet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOUTONS -->
+  <a class="dl-btn"
+     href="https://github.com/fbt276-cpu/mathkid/releases/download/v1.2.0/MathKid-v1.2.0.apk"
+     download>
+    📥 Télécharger l'APK Android
+  </a>
+
+  <a class="pwa-btn"
+     href="https://fbt276-cpu.github.io/mathkid/"
+     target="_blank">
+    🌐 Ouvrir dans le navigateur (PWA)
+  </a>
+
+  <!-- FOOTER NEXXAT -->
+  <div class="footer-info">
+    <strong>NEXXAT — MathKid</strong><br>
+    © NEXXAT - ODET François 2025<br>
+    Chemin : /MathKid/qrcode.html<br>
+    Sourcé par Claude IA · v1.2.0
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Nom      : MathKid QR Code — Script
+   Auteur   : ODET François | NEXXAT
+   Copyright: © NEXXAT - ODET François 2025
+   Version  : 1.2.0
+   Sourcé par : Claude IA
+============================================================ */
+
+const APK_URL = 'https://github.com/fbt276-cpu/mathkid/releases/download/v1.2.0/MathKid-v1.2.0.apk';
+
+// Générer le QR code pointant directement vers l'APK
+new QRCode(document.getElementById('qrcode'), {
+  text: APK_URL,
+  width: 220,
+  height: 220,
+  colorDark: '#1a0a3a',
+  colorLight: '#ffffff',
+  correctLevel: QRCode.CorrectLevel.H
+});
+</script>
+</body>
+</html>
