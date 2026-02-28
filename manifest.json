@@ -1,0 +1,25 @@
+{
+  "name": "MathKid — Calcul Mental NEXXAT",
+  "short_name": "MathKid",
+  "description": "Application de calcul mental pour enfants — © NEXXAT - ODET François 2025 — Sourcé par Claude IA",
+  "start_url": "https://fbt276-cpu.github.io/mathkid/index.html",
+  "scope": "https://fbt276-cpu.github.io/mathkid/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F0A1E",
+  "theme_color": "#6C3CE1",
+  "lang": "fr",
+  "categories": ["education", "kids"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://fbt276-cpu.github.io/mathkid/",
+      "id": "com.nexxat.mathkid"
+    }
+  ]
+}

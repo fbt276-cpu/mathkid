@@ -1,0 +1,41 @@
+{
+  "packageId": "com.nexxat.mathkid",
+  "host": "fbt276-cpu.github.io",
+  "name": "MathKid NEXXAT",
+  "launcherName": "MathKid",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#6C3CE1",
+  "navigationColor": "#0F0A1E",
+  "navigationColorDark": "#0F0A1E",
+  "navigationDividerColor": "#0F0A1E",
+  "navigationDividerColorDark": "#0F0A1E",
+  "backgroundColor": "#0F0A1E",
+  "enableNotifications": false,
+  "startUrl": "/mathkid/index.html",
+  "iconUrl": "https://fbt276-cpu.github.io/mathkid/icons/icon-512.png",
+  "maskableIconUrl": "https://fbt276-cpu.github.io/mathkid/icons/icon-512.png",
+  "monochromeIconUrl": "https://fbt276-cpu.github.io/mathkid/icons/icon-192.png",
+  "appVersion": "1.2.0",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./mathkid-release.keystore",
+    "alias": "mathkid"
+  },
+  "splashScreenFadeOutDuration": 300,
+  "enableSiteSettingsShortcut": false,
+  "isChromeOSOnly": false,
+  "isMetaQuestOnly": false,
+  "fullScopeUrl": "https://fbt276-cpu.github.io/mathkid/",
+  "minSdkVersion": 21,
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "features": {
+    "locationDelegation": { "enabled": false },
+    "playBilling": { "enabled": false }
+  },
+  "alphaDependencies": { "enabled": false },
+  "enableCrashReporting": false,
+  "webManifestUrl": "https://fbt276-cpu.github.io/mathkid/manifest.json"
+}

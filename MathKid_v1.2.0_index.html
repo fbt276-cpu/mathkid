@@ -1,0 +1,1431 @@
+<!--
+============================================================
+Nom du programme : MathKid — Application de calcul mental
+Auteur           : ODET François
+Société          : NEXXAT
+Copyright        : © NEXXAT - ODET François 2025
+Version          : 1.2.0
+Date de création : 2025-02-28 10:00
+Langage          : HTML5 / CSS3 / JavaScript ES2022 (PWA)
+Chemin du fichier: https://fbt276-cpu.github.io/mathkid/index.html
+Sourcé par       : Claude IA
+------------------------------------------------------------
+Historique des versions :
+  v1.2.0 - 2025-02-28 - Intégration GitHub Pages fbt276-cpu,
+                         URL absolues, twa-manifest.json,
+                         deploy_github.sh, assetlinks.json
+  v1.2.0 - 2025-02-28 - Conformité guide NEXXAT complète :
+                         en-têtes, bannière démarrage,
+                         copyright, chemins, deploy.sh,
+                         documentation
+  v1.0.0 - 2025-02-28 - Version initiale
+============================================================
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#6C3CE1"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="MathKid"/>
+  <meta name="description" content="MathKid — Application de calcul mental NEXXAT © 2025 ODET François"/>
+  <link rel="manifest" href="https://fbt276-cpu.github.io/mathkid/manifest.json"/>
+  <link rel="apple-touch-icon" href="https://fbt276-cpu.github.io/mathkid/icons/icon-192.png"/>
+  <link rel="icon" href="https://fbt276-cpu.github.io/mathkid/icons/icon-192.png"/>
+  <meta property="og:title" content="MathKid — Calcul Mental NEXXAT"/>
+  <meta property="og:description" content="Application de calcul mental pour enfants"/>
+  <meta property="og:url" content="https://fbt276-cpu.github.io/mathkid/"/>
+  <meta property="og:image" content="https://fbt276-cpu.github.io/mathkid/icons/icon-512.png"/>
+  <title>MathKid — NEXXAT © 2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ============================================================
+       Nom du programme : MathKid — Styles principaux
+       Auteur           : ODET François
+       Société          : NEXXAT
+       Copyright        : © NEXXAT - ODET François 2025
+       Version          : 1.1.0
+       Chemin du fichier: /MathKid/index.html (styles intégrés)
+       Sourcé par       : Claude IA
+    ============================================================ */
+    :root {
+      --primary:   #6C3CE1;
+      --secondary: #FF6B6B;
+      --accent:    #FFD93D;
+      --green:     #6BCB77;
+      --blue:      #4D96FF;
+      --pink:      #FF6FF2;
+      --orange:    #FF9F1C;
+      --bg:        #0F0A1E;
+      --surface:   #1A1235;
+      --card:      #241A48;
+      --text:      #F0EAFF;
+      --muted:     #8B7BB0;
+      --radius:    20px;
+      --shadow:    0 8px 32px rgba(0,0,0,0.4);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      height: 100%;
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── BACKGROUND STARS ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(2px 2px at 80% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 50%, rgba(255,255,255,0.2) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── SPLASH SCREEN (bannière démarrage NEXXAT) ── */
+    #splash {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      animation: splashOut 0.5s ease 2.5s forwards;
+    }
+    @keyframes splashOut {
+      to { opacity: 0; pointer-events: none; }
+    }
+    .splash-box {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(11px, 3vw, 14px);
+      color: var(--accent);
+      line-height: 1.7;
+      text-align: center;
+      background: rgba(36,26,72,0.9);
+      border: 1px solid rgba(255,217,61,0.3);
+      border-radius: 12px;
+      padding: 20px 28px;
+      box-shadow: 0 0 40px rgba(108,60,225,0.4);
+      animation: splashIn 0.4s ease;
+      max-width: 90vw;
+    }
+    @keyframes splashIn {
+      from { opacity:0; transform: scale(0.9); }
+      to   { opacity:1; transform: scale(1);   }
+    }
+    .splash-box .s-border { color: var(--primary); }
+    .splash-box .s-name   { color: white; font-weight: bold; }
+    .splash-box .s-copy   { color: var(--accent); }
+    .splash-box .s-ai     { color: var(--muted); font-size: 0.9em; }
+    .splash-logo {
+      font-family: 'Baloo 2', cursive;
+      font-size: 48px;
+      margin-bottom: 16px;
+      animation: bounce 1s infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ── APP SHELL ── */
+    #app {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; flex-direction: column; height: 100%; animation: fadeIn .3s ease; }
+    .page.active { display: flex; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px;
+      background: linear-gradient(180deg, rgba(108,60,225,0.25) 0%, transparent 100%);
+      flex-shrink: 0;
+    }
+    .logo {
+      font-family: 'Baloo 2', cursive;
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFD93D, #FF6B6B, #6C3CE1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .copyright {
+      font-size: 9px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.4;
+    }
+    .copyright strong { color: var(--accent); font-size: 10px; }
+
+    /* ── NAV BAR ── */
+    .navbar {
+      display: flex;
+      background: var(--surface);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 10px 4px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color .2s, transform .1s;
+    }
+    .nav-btn .icon { font-size: 22px; }
+    .nav-btn.active { color: var(--accent); }
+    .nav-btn:active { transform: scale(0.9); }
+
+    /* ── SCROLL AREA ── */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* ── HOME PAGE ── */
+    .home-hero { text-align: center; padding: 8px 0 16px; }
+    .hero-emoji { font-size: 72px; animation: bounce 2s infinite; display: block; }
+    .hero-title {
+      font-family: 'Baloo 2', cursive;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin: 8px 0 4px;
+    }
+    .hero-sub { font-size: 14px; color: var(--muted); }
+
+    .player-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .player-name-row input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .player-name-row input::placeholder { color: var(--muted); }
+
+    .level-cards { display: flex; gap: 12px; margin: 12px 0; }
+    .level-card {
+      flex: 1;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color .2s, transform .15s, box-shadow .2s;
+    }
+    .level-card:active { transform: scale(0.96); }
+    .level-card.selected { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,217,61,0.3); }
+    .level-card .lv-emoji { font-size: 36px; }
+    .level-card .lv-title { font-size: 15px; font-weight: 800; margin: 6px 0 2px; }
+    .level-card .lv-desc  { font-size: 11px; color: var(--muted); }
+
+    .start-btn {
+      width: 100%;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: none;
+      background: linear-gradient(135deg, var(--primary), #9B59E6);
+      color: white;
+      font-family: 'Baloo 2', cursive;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(108,60,225,0.5);
+      transition: transform .15s, box-shadow .15s;
+      margin: 8px 0;
+    }
+    .start-btn:active { transform: scale(0.97); box-shadow: 0 2px 12px rgba(108,60,225,0.4); }
+
+    .ops-quick { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 12px; }
+    .op-chip {
+      flex: 1;
+      min-width: 60px;
+      padding: 10px 6px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.1);
+      background: var(--card);
+      color: var(--text);
+      font-family: 'Baloo 2', cursive;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .1s;
+    }
+    .op-chip.active { border-color: var(--green); background: rgba(107,203,119,0.15); color: var(--green); }
+    .op-chip:active { transform: scale(0.9); }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 16px 0 8px;
+    }
+
+    /* ── GAME PAGE ── */
+    .game-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      flex-shrink: 0;
+    }
+    .game-info .q-count { font-size: 12px; color: var(--muted); font-weight: 700; }
+    .game-info .q-score {
+      font-family: 'Baloo 2', cursive;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .timer-ring { position: relative; width: 54px; height: 54px; }
+    .timer-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .timer-ring circle { fill: none; stroke-width: 4; }
+    .timer-ring .bg-ring { stroke: rgba(255,255,255,0.1); }
+    .timer-ring .fg-ring {
+      stroke: var(--green);
+      stroke-linecap: round;
+      stroke-dasharray: 138;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset .9s linear, stroke .5s;
+    }
+    .timer-val {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Baloo 2', cursive;
+      font-size: 16px; font-weight: 800;
+    }
+
+    .progress-bar-wrap { padding: 0 16px 8px; flex-shrink: 0; }
+    .progress-bar-bg {
+      height: 6px; background: rgba(255,255,255,0.1);
+      border-radius: 99px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+
+    .question-area {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 16px; gap: 16px;
+    }
+    .question-card {
+      width: 100%; background: var(--card);
+      border-radius: 24px; padding: 28px 20px;
+      text-align: center; box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative; overflow: hidden;
+    }
+    .question-card::before {
+      content: ''; position: absolute;
+      top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,60,225,0.3), transparent 70%);
+    }
+    .question-op-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; }
+    .question-text {
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(36px, 12vw, 56px);
+      font-weight: 800; line-height: 1;
+      background: linear-gradient(135deg, var(--text), #C8B8FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Level 1: MCQ */
+    .mcq-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; }
+    .mcq-btn {
+      padding: 20px 8px;
+      border-radius: 18px;
+      border: 2px solid rgba(255,255,255,0.1);
+      background: var(--card); color: var(--text);
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(22px, 7vw, 32px); font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, background .15s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .mcq-btn:active:not(:disabled) { transform: scale(0.93); }
+    .mcq-btn.correct { background: rgba(107,203,119,0.25); border-color: var(--green); color: var(--green); animation: pop .3s ease; }
+    .mcq-btn.wrong   { background: rgba(255,107,107,0.25); border-color: var(--secondary); color: var(--secondary); animation: shake .3s ease; }
+    .mcq-btn.reveal  { background: rgba(107,203,119,0.15); border-color: var(--green); }
+
+    /* Level 2: Input */
+    .input-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .answer-input {
+      width: 100%; background: var(--card);
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 18px; color: var(--text);
+      font-family: 'Baloo 2', cursive;
+      font-size: 48px; font-weight: 800;
+      text-align: center; padding: 14px;
+      outline: none; transition: border-color .2s;
+    }
+    .answer-input:focus  { border-color: var(--primary); }
+    .answer-input.correct { border-color: var(--green); background: rgba(107,203,119,0.15); }
+    .answer-input.wrong   { border-color: var(--secondary); background: rgba(255,107,107,0.15); animation: shake .3s ease; }
+
+    .numpad { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .num-key {
+      padding: 15px;
+      border-radius: 14px; border: none;
+      background: var(--card); color: var(--text);
+      font-family: 'Baloo 2', cursive;
+      font-size: 24px; font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: transform .1s, background .1s;
+    }
+    .num-key:active  { transform: scale(0.92); background: var(--surface); }
+    .num-key.del-key { background: rgba(255,107,107,0.2); color: var(--secondary); }
+    .num-key.ok-key  {
+      background: linear-gradient(135deg, var(--green), #4CAF7D);
+      color: white; grid-column: span 2;
+    }
+
+    /* Feedback */
+    .feedback-overlay {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; z-index: 100;
+    }
+    .feedback-emoji {
+      font-size: 100px;
+      animation: feedbackPop .6s forwards; opacity: 0;
+    }
+    @keyframes feedbackPop {
+      0%   { opacity:0; transform: scale(0.3) rotate(-15deg); }
+      40%  { opacity:1; transform: scale(1.2) rotate(5deg); }
+      70%  { transform: scale(0.95) rotate(-2deg); }
+      85%  { opacity:1; transform: scale(1); }
+      100% { opacity:0; transform: scale(1); }
+    }
+    @keyframes pop   { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(-8px)}
+      75%{transform:translateX(8px)}
+    }
+
+    /* ── RESULTS ── */
+    .results-scroll { flex:1; overflow-y:auto; padding:16px; }
+    .result-hero { text-align:center; padding:8px 0 16px; }
+    .result-trophy { font-size:80px; animation:bounce 2s infinite; }
+    .result-score {
+      font-family:'Baloo 2',cursive; font-size:56px; font-weight:800;
+      background:linear-gradient(135deg,var(--accent),var(--orange));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .result-label { font-size:14px; color:var(--muted); margin-top:4px; }
+    .result-stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+    .stat-card { background:var(--card); border-radius:16px; padding:14px; text-align:center; }
+    .stat-card .stat-icon { font-size:28px; }
+    .stat-card .stat-val  { font-family:'Baloo 2',cursive; font-size:24px; font-weight:800; margin:4px 0 2px; }
+    .stat-card .stat-label { font-size:11px; color:var(--muted); }
+    .result-btns { display:flex; gap:10px; margin-top:12px; }
+    .btn-secondary {
+      flex:1; padding:16px; border-radius:16px;
+      border:2px solid rgba(255,255,255,0.15);
+      background:transparent; color:var(--text);
+      font-family:'Baloo 2',cursive; font-size:16px; font-weight:800;
+      cursor:pointer; transition:background .2s, transform .1s;
+    }
+    .btn-secondary:active { background:var(--card); transform:scale(0.97); }
+    .btn-primary {
+      flex:1.5; padding:16px; border-radius:16px; border:none;
+      background:linear-gradient(135deg,var(--primary),#9B59E6);
+      color:white; font-family:'Baloo 2',cursive; font-size:16px; font-weight:800;
+      cursor:pointer; box-shadow:0 4px 16px rgba(108,60,225,0.4);
+      transition:transform .1s;
+    }
+    .btn-primary:active { transform:scale(0.97); }
+
+    /* ── STATS ── */
+    .stats-scroll { flex:1; overflow-y:auto; padding:16px; }
+    .stats-global { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+    .stats-chart-card { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:14px; }
+    .chart-title { font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+    .op-stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .op-stat-card { background:var(--card); border-radius:16px; padding:14px; }
+    .op-stat-card .op-name { font-size:13px; font-weight:800; margin-bottom:8px; }
+    .op-stat-card .op-pct  { font-family:'Baloo 2',cursive; font-size:28px; font-weight:800; }
+    .op-stat-card .op-detail { font-size:11px; color:var(--muted); margin-top:2px; }
+    .mini-bar { height:6px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; margin-top:8px; }
+    .mini-bar-fill { height:100%; border-radius:99px; }
+    .no-stats { text-align:center; padding:40px 16px; color:var(--muted); font-size:15px; }
+    .no-stats .ns-emoji { font-size:60px; margin-bottom:12px; }
+    .clear-btn {
+      margin-top:16px; width:100%; padding:14px;
+      border-radius:14px; border:2px solid rgba(255,107,107,0.3);
+      background:transparent; color:var(--secondary);
+      font-family:'Baloo 2',cursive; font-size:16px; font-weight:800; cursor:pointer;
+    }
+
+    /* ── SETTINGS ── */
+    .settings-scroll { flex:1; overflow-y:auto; padding:16px; }
+    .settings-card { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:14px; }
+    .settings-card .card-title { font-size:15px; font-weight:800; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .ops-toggle-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .toggle-item {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:8px; padding:12px 14px;
+      background:var(--surface); border-radius:14px; cursor:pointer;
+    }
+    .toggle-item .t-label { font-size:14px; font-weight:700; }
+    .toggle-item .t-sym   { font-family:'Baloo 2',cursive; font-size:22px; font-weight:800; }
+    .switch { position:relative; width:44px; height:26px; flex-shrink:0; }
+    .switch input { display:none; }
+    .switch-slider {
+      position:absolute; inset:0;
+      border-radius:99px; background:rgba(255,255,255,0.15);
+      transition:background .2s; cursor:pointer;
+    }
+    .switch-slider::before {
+      content:''; position:absolute;
+      left:3px; top:3px; width:20px; height:20px;
+      border-radius:50%; background:white; transition:transform .2s;
+    }
+    input:checked + .switch-slider { background:var(--green); }
+    input:checked + .switch-slider::before { transform:translateX(18px); }
+    .range-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+    .range-row:last-child { margin-bottom:0; }
+    .range-label { font-size:14px; font-weight:700; flex:1; }
+    .range-val   { font-family:'Baloo 2',cursive; font-size:22px; font-weight:800; min-width:48px; text-align:right; color:var(--accent); }
+    input[type=range] { -webkit-appearance:none; width:100%; height:6px; border-radius:99px; background:rgba(255,255,255,0.15); outline:none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--primary); box-shadow:0 2px 8px rgba(108,60,225,0.5); cursor:pointer; }
+    .save-btn {
+      width:100%; padding:16px; border-radius:var(--radius); border:none;
+      background:linear-gradient(135deg,var(--green),#4CAF7D);
+      color:white; font-family:'Baloo 2',cursive; font-size:20px; font-weight:800;
+      cursor:pointer; box-shadow:0 4px 16px rgba(107,203,119,0.4);
+      transition:transform .1s; margin-top:4px;
+    }
+    .save-btn:active { transform:scale(0.97); }
+    .version-info {
+      text-align:center; font-size:10px; color:var(--muted);
+      padding:12px; line-height:1.7;
+      font-family:'Courier New', monospace;
+    }
+    .version-info strong { color:var(--accent); }
+
+    /* ── INSTALL BANNER ── */
+    #install-banner {
+      position:fixed;
+      bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+      left:50%; transform:translateX(-50%);
+      width:calc(100% - 32px); max-width:448px;
+      background:var(--card); border-radius:16px;
+      padding:14px 16px;
+      display:none; align-items:center; gap:12px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      border:1px solid rgba(255,255,255,0.1); z-index:50;
+    }
+    #install-banner .ib-text { flex:1; font-size:13px; font-weight:700; }
+    #install-banner .ib-text span { display:block; font-size:11px; color:var(--muted); font-weight:400; margin-top:2px; }
+    .ib-btn { padding:8px 16px; border-radius:10px; border:none; background:var(--primary); color:white; font-family:'Baloo 2',cursive; font-size:14px; font-weight:800; cursor:pointer; }
+    .ib-close { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:0; }
+
+    #confetti-canvas { position:fixed; inset:0; pointer-events:none; z-index:200; }
+  </style>
+</head>
+<body>
+
+<!-- ── SPLASH SCREEN NEXXAT ── -->
+<div id="splash">
+  <div class="splash-logo">🧮</div>
+  <div class="splash-box">
+    <span class="s-border">╔══════════════════════════════════╗</span><br>
+    <span class="s-border">║</span> <span class="s-name">NEXXAT — MathKid</span> <span class="s-border">║</span><br>
+    <span class="s-border">║</span> Chemin : /MathKid/index.html <span class="s-border">║</span><br>
+    <span class="s-border">║</span> <span class="s-copy">© NEXXAT - ODET François 2025</span> <span class="s-border">║</span><br>
+    <span class="s-border">║</span> Version : 1.1.0 | 2025-02-28 <span class="s-border">║</span><br>
+    <span class="s-border">║</span> <span class="s-ai">Sourcé par Claude IA</span> <span class="s-border">║</span><br>
+    <span class="s-border">╚══════════════════════════════════╝</span>
+  </div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════════
+       PAGE: HOME
+  ══════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+    <div class="header">
+      <div class="logo">🧮 MathKid</div>
+      <div class="copyright">
+        <strong>© NEXXAT 2025</strong><br>
+        ODET François · v1.2.0<br>
+        Sourcé par Claude IA
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="home-hero">
+        <span class="hero-emoji" id="hero-emoji">🚀</span>
+        <div class="hero-title">Prêt à calculer ?</div>
+        <div class="hero-sub">Choisis ton niveau et c'est parti !</div>
+      </div>
+
+      <div class="player-name-row">
+        <span>👤</span>
+        <input type="text" id="player-name" placeholder="Ton prénom..." maxlength="20"/>
+      </div>
+
+      <div class="section-title">Niveau de jeu</div>
+      <div class="level-cards">
+        <div class="level-card selected" data-level="1" onclick="selectLevel(1)">
+          <div class="lv-emoji">🎯</div>
+          <div class="lv-title">Niveau 1</div>
+          <div class="lv-desc">Choisis parmi 3 réponses</div>
+        </div>
+        <div class="level-card" data-level="2" onclick="selectLevel(2)">
+          <div class="lv-emoji">✏️</div>
+          <div class="lv-title">Niveau 2</div>
+          <div class="lv-desc">Écris ta réponse</div>
+        </div>
+      </div>
+
+      <div class="section-title">Opérations rapides</div>
+      <div class="ops-quick" id="ops-quick">
+        <div class="op-chip active" data-op="add" onclick="toggleOp('add',this)">＋</div>
+        <div class="op-chip" data-op="sub" onclick="toggleOp('sub',this)">－</div>
+        <div class="op-chip" data-op="mul" onclick="toggleOp('mul',this)">×</div>
+        <div class="op-chip" data-op="div" onclick="toggleOp('div',this)">÷</div>
+      </div>
+
+      <button class="start-btn" onclick="startGame()">▶ GO !</button>
+    </div>
+    <nav class="navbar">
+      <button class="nav-btn active" onclick="showPage('home')"><span class="icon">🏠</span>Accueil</button>
+      <button class="nav-btn" onclick="showPage('stats')"><span class="icon">📊</span>Stats</button>
+      <button class="nav-btn" onclick="showPage('settings')"><span class="icon">⚙️</span>Réglages</button>
+    </nav>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: GAME
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-game">
+    <div class="game-header">
+      <div class="game-info">
+        <div class="q-count" id="q-count">Question 1/10</div>
+        <div class="q-score">⭐ <span id="g-score">0</span></div>
+      </div>
+      <div id="op-badge" style="font-family:'Baloo 2',cursive;font-size:26px;font-weight:800;"></div>
+      <div class="timer-ring">
+        <svg viewBox="0 0 48 48">
+          <circle class="bg-ring" cx="24" cy="24" r="22"/>
+          <circle class="fg-ring" id="timer-ring" cx="24" cy="24" r="22"/>
+        </svg>
+        <div class="timer-val" id="timer-val">30</div>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="question-area" id="question-area">
+      <div class="question-card">
+        <div class="question-op-label" id="op-label">Addition</div>
+        <div class="question-text" id="question-text">3 + 4 = ?</div>
+      </div>
+    </div>
+    <div class="feedback-overlay" id="feedback-overlay"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: RESULTS
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-results">
+    <div class="header">
+      <div class="logo">🏆 Résultats</div>
+      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.0</div>
+    </div>
+    <div class="results-scroll">
+      <div class="result-hero">
+        <div class="result-trophy" id="result-trophy">🏆</div>
+        <div class="result-score"><span id="res-correct">0</span>/<span id="res-total">10</span></div>
+        <div class="result-label" id="res-label">Félicitations !</div>
+      </div>
+      <div class="result-stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-val" id="res-pct">0%</div>
+          <div class="stat-label">Taux de réussite</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-val" id="res-time">0s</div>
+          <div class="stat-label">Temps moyen / question</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-val" id="res-best">-</div>
+          <div class="stat-label">Meilleure réponse</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-val" id="res-streak">0</div>
+          <div class="stat-label">Meilleure série</div>
+        </div>
+      </div>
+      <div class="result-btns">
+        <button class="btn-secondary" onclick="goHome()">🏠 Accueil</button>
+        <button class="btn-primary"   onclick="startGame()">🔄 Rejouer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: STATS
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-stats">
+    <div class="header">
+      <div class="logo">📊 Statistiques</div>
+      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.0</div>
+    </div>
+    <div class="stats-scroll" id="stats-content"></div>
+    <nav class="navbar">
+      <button class="nav-btn" onclick="showPage('home')"><span class="icon">🏠</span>Accueil</button>
+      <button class="nav-btn active" onclick="showPage('stats')"><span class="icon">📊</span>Stats</button>
+      <button class="nav-btn" onclick="showPage('settings')"><span class="icon">⚙️</span>Réglages</button>
+    </nav>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: SETTINGS
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-settings">
+    <div class="header">
+      <div class="logo">⚙️ Réglages</div>
+      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.0</div>
+    </div>
+    <div class="settings-scroll">
+      <div class="settings-card">
+        <div class="card-title">🔢 Opérations actives</div>
+        <div class="ops-toggle-grid">
+          <div class="toggle-item">
+            <div><div class="t-label">Addition</div><div class="t-sym" style="color:var(--green)">＋</div></div>
+            <label class="switch"><input type="checkbox" id="s-add" checked onchange="saveSettings()"/><span class="switch-slider"></span></label>
+          </div>
+          <div class="toggle-item">
+            <div><div class="t-label">Soustraction</div><div class="t-sym" style="color:var(--blue)">－</div></div>
+            <label class="switch"><input type="checkbox" id="s-sub" onchange="saveSettings()"/><span class="switch-slider"></span></label>
+          </div>
+          <div class="toggle-item">
+            <div><div class="t-label">Multiplication</div><div class="t-sym" style="color:var(--orange)">×</div></div>
+            <label class="switch"><input type="checkbox" id="s-mul" onchange="saveSettings()"/><span class="switch-slider"></span></label>
+          </div>
+          <div class="toggle-item">
+            <div><div class="t-label">Division</div><div class="t-sym" style="color:var(--pink)">÷</div></div>
+            <label class="switch"><input type="checkbox" id="s-div" onchange="saveSettings()"/><span class="switch-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-title">🎛️ Paramètres des nombres</div>
+        <div class="range-row">
+          <div style="flex:1">
+            <div class="range-label">Maximum de chaque nombre</div>
+            <input type="range" id="s-max" min="5" max="100" step="5" value="10" oninput="updateRangeVal('s-max','v-max')"/>
+          </div>
+          <div class="range-val" id="v-max">10</div>
+        </div>
+        <div class="range-row">
+          <div style="flex:1">
+            <div class="range-label">Questions par session</div>
+            <input type="range" id="s-count" min="5" max="30" step="5" value="10" oninput="updateRangeVal('s-count','v-count')"/>
+          </div>
+          <div class="range-val" id="v-count">10</div>
+        </div>
+        <div class="range-row">
+          <div style="flex:1">
+            <div class="range-label">Secondes par question</div>
+            <input type="range" id="s-timer" min="10" max="60" step="5" value="30" oninput="updateRangeVal('s-timer','v-timer')"/>
+          </div>
+          <div class="range-val" id="v-timer">30</div>
+        </div>
+      </div>
+
+      <button class="save-btn" onclick="saveAndConfirm()">💾 Enregistrer</button>
+
+      <div class="version-info">
+        <strong>NEXXAT — MathKid</strong><br>
+        Chemin : /MathKid/index.html<br>
+        © NEXXAT - ODET François 2025<br>
+        Version : 1.1.0 | Date : 2025-02-28<br>
+        Langage : HTML5 / CSS3 / JavaScript ES2022<br>
+        Sourcé par Claude IA
+      </div>
+    </div>
+    <nav class="navbar">
+      <button class="nav-btn" onclick="showPage('home')"><span class="icon">🏠</span>Accueil</button>
+      <button class="nav-btn" onclick="showPage('stats')"><span class="icon">📊</span>Stats</button>
+      <button class="nav-btn active" onclick="showPage('settings')"><span class="icon">⚙️</span>Réglages</button>
+    </nav>
+  </div>
+
+</div><!-- /app -->
+
+<div id="install-banner">
+  <div>📲</div>
+  <div class="ib-text">Installer MathKid<span>Accès rapide sur l'écran d'accueil</span></div>
+  <button class="ib-btn" onclick="installApp()">Installer</button>
+  <button class="ib-close" onclick="dismissInstall()">✕</button>
+</div>
+
+<script>
+/* ============================================================
+   Nom du programme : MathKid — Logique applicative
+   Auteur           : ODET François
+   Société          : NEXXAT
+   Copyright        : © NEXXAT - ODET François 2025
+   Version          : 1.2.0
+   Date de création : 2025-02-28 10:00
+   Langage          : JavaScript ES2022 (Vanilla PWA)
+   Chemin du fichier: https://fbt276-cpu.github.io/mathkid/index.html
+   Sourcé par       : Claude IA
+   ------------------------------------------------------------
+   Historique des versions :
+     v1.2.0 - 2025-02-28 - URL GitHub Pages fbt276-cpu,
+                            twa-manifest.json, assetlinks.json,
+                            deploy_github.sh automatisé
+     v1.2.0 - 2025-02-28 - Conformité guide NEXXAT :
+                            en-têtes complets, splash NEXXAT,
+                            copyright dans tous les affichages,
+                            chemins, deploy.sh, documentation
+     v1.0.0 - 2025-02-28 - Version initiale
+============================================================ */
+
+'use strict';
+
+const APP_VERSION   = '1.2.0';
+const APP_DATE      = '2025-02-28';
+const APP_PATH      = 'https://fbt276-cpu.github.io/mathkid/index.html';
+const APP_COPYRIGHT = '© NEXXAT - ODET François 2025';
+
+const OP_CONFIG = {
+  add: { label: 'Addition',       sym: '＋', color: 'var(--green)',  emoji: '➕' },
+  sub: { label: 'Soustraction',   sym: '－', color: 'var(--blue)',   emoji: '➖' },
+  mul: { label: 'Multiplication', sym: '×',  color: 'var(--orange)', emoji: '✖️' },
+  div: { label: 'Division',       sym: '÷',  color: 'var(--pink)',   emoji: '➗' }
+};
+const HERO_EMOJIS = ['🚀','🦄','🐸','⭐','🎮','🦊','🌈','🐧','🎯','🏆'];
+const GOOD_EMOJIS = ['🎉','⭐','🔥','💪','🥳','😎','✨','👏','🌟','💥'];
+const BAD_EMOJIS  = ['😅','💪','🤔','😬','👀','💭'];
+
+// ── ÉTAT ─────────────────────────────────────────────────────
+let settings = { ops: ['add'], maxVal: 10, questionCount: 10, timerSec: 30 };
+let gameState = null;
+let timerInterval = null;
+let currentAnswer = '';
+let chartLine = null, chartBar = null;
+let deferredInstallPrompt = null;
+let selectedLevel = 1;
+
+// ── INIT ─────────────────────────────────────────────────────
+function init() {
+  loadSettings();
+  loadPlayerName();
+  syncSettingsUI();
+  syncOpsQuick();
+  setHeroEmoji();
+  // Cacher le splash après 3s
+  setTimeout(() => {
+    const s = document.getElementById('splash');
+    if (s) s.style.display = 'none';
+  }, 3100);
+}
+
+function setHeroEmoji() {
+  document.getElementById('hero-emoji').textContent =
+    HERO_EMOJIS[Math.floor(Math.random() * HERO_EMOJIS.length)];
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active',
+      b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'"));
+  });
+  if (name === 'stats') renderStats();
+}
+
+// ── PLAYER ──────────────────────────────────────────────────
+function loadPlayerName() {
+  document.getElementById('player-name').value = localStorage.getItem('mk_name') || '';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('player-name').addEventListener('change', e => {
+    localStorage.setItem('mk_name', e.target.value.trim());
+  });
+});
+
+// ── SETTINGS ─────────────────────────────────────────────────
+function loadSettings() {
+  const saved = localStorage.getItem('mk_settings');
+  if (saved) try { Object.assign(settings, JSON.parse(saved)); } catch(e) {}
+}
+function saveSettings() {
+  const ops = [];
+  if (document.getElementById('s-add').checked) ops.push('add');
+  if (document.getElementById('s-sub').checked) ops.push('sub');
+  if (document.getElementById('s-mul').checked) ops.push('mul');
+  if (document.getElementById('s-div').checked) ops.push('div');
+  if (ops.length === 0) { showToast('⚠️ Active au moins une opération !'); return; }
+  settings.ops           = ops;
+  settings.maxVal        = +document.getElementById('s-max').value;
+  settings.questionCount = +document.getElementById('s-count').value;
+  settings.timerSec      = +document.getElementById('s-timer').value;
+  localStorage.setItem('mk_settings', JSON.stringify(settings));
+  syncOpsQuick();
+}
+function saveAndConfirm() { saveSettings(); showToast('✅ Réglages enregistrés !'); }
+function syncSettingsUI() {
+  document.getElementById('s-add').checked = settings.ops.includes('add');
+  document.getElementById('s-sub').checked = settings.ops.includes('sub');
+  document.getElementById('s-mul').checked = settings.ops.includes('mul');
+  document.getElementById('s-div').checked = settings.ops.includes('div');
+  document.getElementById('s-max').value    = settings.maxVal;
+  document.getElementById('s-count').value  = settings.questionCount;
+  document.getElementById('s-timer').value  = settings.timerSec;
+  document.getElementById('v-max').textContent   = settings.maxVal;
+  document.getElementById('v-count').textContent = settings.questionCount;
+  document.getElementById('v-timer').textContent = settings.timerSec;
+}
+function updateRangeVal(inputId, labelId) {
+  document.getElementById(labelId).textContent = document.getElementById(inputId).value;
+}
+function syncOpsQuick() {
+  document.querySelectorAll('.op-chip').forEach(chip =>
+    chip.classList.toggle('active', settings.ops.includes(chip.dataset.op)));
+}
+function toggleOp(op, el) {
+  const idx = settings.ops.indexOf(op);
+  if (idx >= 0) {
+    if (settings.ops.length === 1) { showToast('⚠️ Garde au moins une opération !'); return; }
+    settings.ops.splice(idx, 1); el.classList.remove('active');
+  } else {
+    settings.ops.push(op); el.classList.add('active');
+  }
+  localStorage.setItem('mk_settings', JSON.stringify(settings));
+}
+function selectLevel(lv) {
+  selectedLevel = lv;
+  document.querySelectorAll('.level-card').forEach(c =>
+    c.classList.toggle('selected', +c.dataset.level === lv));
+}
+
+// ── QUESTION GENERATOR ───────────────────────────────────────
+function generateQuestion(op, maxVal) {
+  let a, b, answer, display;
+  switch(op) {
+    case 'add':
+      a = rand(0,maxVal); b = rand(0,maxVal);
+      answer = a + b; display = `${a} + ${b} = ?`; break;
+    case 'sub':
+      a = rand(0,maxVal); b = rand(0,a);
+      answer = a - b; display = `${a} − ${b} = ?`; break;
+    case 'mul':
+      a = rand(0,maxVal); b = rand(0,Math.min(maxVal,10));
+      answer = a * b; display = `${a} × ${b} = ?`; break;
+    case 'div':
+      b = rand(1,Math.min(maxVal,10));
+      answer = rand(0,Math.floor(maxVal/b));
+      a = answer * b;
+      display = `${a} ÷ ${b} = ?`; break;
+  }
+  return { op, a, b, answer, display };
+}
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function generateChoices(correct) {
+  const pool = new Set([correct]);
+  while(pool.size < 3) {
+    const offset = rand(1, Math.max(5, Math.ceil(correct * 0.4) + 2));
+    const c = correct + (Math.random() < 0.5 ? offset : -offset);
+    if (c >= 0) pool.add(c);
+  }
+  return shuffle([...pool]);
+}
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// ── GAME ─────────────────────────────────────────────────────
+function startGame() {
+  if (settings.ops.length === 0) { showToast('⚠️ Aucune opération sélectionnée !'); return; }
+  const qs = [];
+  for (let i = 0; i < settings.questionCount; i++)
+    qs.push(generateQuestion(settings.ops[i % settings.ops.length], settings.maxVal));
+  shuffle(qs);
+  gameState = {
+    level: selectedLevel, questions: qs, current: 0,
+    score: 0, startTimes: [], responseTimes: [], results: [],
+    streak: 0, bestStreak: 0, timerRemaining: settings.timerSec
+  };
+  showPage('game');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const gs  = gameState;
+  const q   = gs.questions[gs.current];
+  const cfg = OP_CONFIG[q.op];
+  const total = gs.questions.length;
+  document.getElementById('q-count').textContent  = `Question ${gs.current+1}/${total}`;
+  document.getElementById('g-score').textContent   = gs.score;
+  document.getElementById('op-badge').textContent  = cfg.emoji;
+  document.getElementById('op-label').textContent  = cfg.label;
+  document.getElementById('question-text').textContent = q.display;
+  document.getElementById('progress-fill').style.width = `${(gs.current/total)*100}%`;
+
+  const qa = document.getElementById('question-area');
+  qa.querySelectorAll('.mcq-grid, .input-area').forEach(el => el.remove());
+
+  gs.timerRemaining = settings.timerSec;
+  gs.startTimes[gs.current] = Date.now();
+  startTimer(q);
+
+  if (gs.level === 1) renderMCQ(q, qa);
+  else                renderInput(q, qa);
+}
+
+// ── TIMER ────────────────────────────────────────────────────
+function startTimer(q) {
+  clearInterval(timerInterval);
+  updateTimerUI(gameState.timerRemaining, settings.timerSec);
+  timerInterval = setInterval(() => {
+    gameState.timerRemaining--;
+    updateTimerUI(gameState.timerRemaining, settings.timerSec);
+    if (gameState.timerRemaining <= 0) {
+      clearInterval(timerInterval);
+      handleTimeout(q);
+    }
+  }, 1000);
+}
+function updateTimerUI(remaining, total) {
+  const pct  = remaining / total;
+  const circ = 138;
+  const ring = document.getElementById('timer-ring');
+  const val  = document.getElementById('timer-val');
+  ring.style.strokeDashoffset = circ * (1 - pct);
+  ring.style.stroke = pct > 0.5 ? 'var(--green)' : pct > 0.25 ? 'var(--orange)' : 'var(--secondary)';
+  val.textContent   = remaining;
+  val.style.color   = pct > 0.5 ? 'var(--text)'   : pct > 0.25 ? 'var(--orange)' : 'var(--secondary)';
+}
+function handleTimeout(q) {
+  recordResponse(false, q);
+  showFeedback('⏰');
+  if (gameState.level === 1) revealCorrect(q.answer);
+  else                       markInputWrong();
+  setTimeout(nextQuestion, 1200);
+}
+
+// ── LEVEL 1: MCQ ─────────────────────────────────────────────
+function renderMCQ(q, container) {
+  const choices = generateChoices(q.answer);
+  const grid = document.createElement('div');
+  grid.className = 'mcq-grid';
+  choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'mcq-btn';
+    btn.textContent = choice;
+    btn.onclick = () => handleMCQAnswer(choice, q, grid);
+    grid.appendChild(btn);
+  });
+  container.appendChild(grid);
+}
+function handleMCQAnswer(choice, q, grid) {
+  clearInterval(timerInterval);
+  const correct = choice === q.answer;
+  recordResponse(correct, q);
+  grid.querySelectorAll('.mcq-btn').forEach(btn => {
+    btn.disabled = true;
+    if (+btn.textContent === q.answer) btn.classList.add('correct');
+    if (+btn.textContent === choice && !correct) btn.classList.add('wrong');
+  });
+  showFeedback(correct ? GOOD_EMOJIS[rand(0,GOOD_EMOJIS.length-1)] : BAD_EMOJIS[rand(0,BAD_EMOJIS.length-1)]);
+  if (correct) launchConfetti();
+  setTimeout(nextQuestion, correct ? 900 : 1400);
+}
+function revealCorrect(answer) {
+  document.querySelectorAll('.mcq-btn').forEach(btn => {
+    btn.disabled = true;
+    if (+btn.textContent === answer) btn.classList.add('reveal');
+  });
+}
+
+// ── LEVEL 2: INPUT ───────────────────────────────────────────
+function renderInput(q, container) {
+  currentAnswer = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'input-area';
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.inputMode = 'none';
+  inp.className = 'answer-input'; inp.id = 'answer-input';
+  inp.placeholder = '?'; inp.readOnly = true;
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+  ['7','8','9','4','5','6','1','2','3','⌫','0','OK'].forEach(k => {
+    const btn = document.createElement('button');
+    btn.className = 'num-key' + (k==='⌫' ? ' del-key' : k==='OK' ? ' ok-key' : '');
+    btn.textContent = k;
+    if (k === 'OK') btn.style.gridColumn = 'span 2';
+    btn.onclick = () => handleNumpad(k, q, inp);
+    numpad.appendChild(btn);
+  });
+  wrap.appendChild(inp);
+  wrap.appendChild(numpad);
+  container.appendChild(wrap);
+}
+function handleNumpad(key, q, inp) {
+  if (key === '⌫') {
+    currentAnswer = currentAnswer.slice(0,-1);
+  } else if (key === 'OK') {
+    if (currentAnswer === '') return;
+    clearInterval(timerInterval);
+    const correct = +currentAnswer === q.answer;
+    recordResponse(correct, q);
+    inp.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) inp.value = `${currentAnswer} → ${q.answer}`;
+    showFeedback(correct ? GOOD_EMOJIS[rand(0,GOOD_EMOJIS.length-1)] : BAD_EMOJIS[rand(0,BAD_EMOJIS.length-1)]);
+    if (correct) launchConfetti();
+    document.querySelectorAll('.num-key').forEach(b => b.disabled = true);
+    setTimeout(nextQuestion, correct ? 900 : 1400);
+    return;
+  } else {
+    if (currentAnswer.length >= 5) return;
+    currentAnswer += key;
+  }
+  inp.value = currentAnswer;
+}
+function markInputWrong() {
+  const inp = document.getElementById('answer-input');
+  if (inp) { inp.classList.add('wrong'); inp.value = `→ ${gameState.questions[gameState.current].answer}`; }
+  document.querySelectorAll('.num-key').forEach(b => b.disabled = true);
+}
+
+// ── LOGIC ────────────────────────────────────────────────────
+function recordResponse(correct, q) {
+  const elapsed = (Date.now() - gameState.startTimes[gameState.current]) / 1000;
+  gameState.responseTimes[gameState.current] = elapsed;
+  gameState.results[gameState.current] = correct;
+  if (correct) {
+    gameState.score += Math.max(1, Math.round(10 * (gameState.timerRemaining / settings.timerSec)));
+    gameState.streak++;
+    gameState.bestStreak = Math.max(gameState.bestStreak, gameState.streak);
+  } else {
+    gameState.streak = 0;
+  }
+}
+function nextQuestion() {
+  gameState.current++;
+  if (gameState.current >= gameState.questions.length) endGame();
+  else renderQuestion();
+}
+function showFeedback(emoji) {
+  const overlay = document.getElementById('feedback-overlay');
+  overlay.innerHTML = `<div class="feedback-emoji">${emoji}</div>`;
+  setTimeout(() => { if(overlay) overlay.innerHTML = ''; }, 700);
+}
+
+// ── END GAME ─────────────────────────────────────────────────
+function endGame() {
+  clearInterval(timerInterval);
+  const gs = gameState;
+  const correct = gs.results.filter(Boolean).length;
+  const total   = gs.questions.length;
+  const pct     = Math.round(correct / total * 100);
+  const times   = gs.responseTimes.filter(t => t !== undefined);
+  const avgTime = times.length ? (times.reduce((a,b)=>a+b,0)/times.length).toFixed(1) : '-';
+  const bestTime = times.length ? Math.min(...times).toFixed(1) : '-';
+
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-total').textContent   = total;
+  document.getElementById('res-pct').textContent     = pct + '%';
+  document.getElementById('res-time').textContent    = avgTime + 's';
+  document.getElementById('res-best').textContent    = bestTime + 's';
+  document.getElementById('res-streak').textContent  = gs.bestStreak;
+
+  let trophy = '😅', label = 'Continue à t\'entraîner !';
+  if      (pct >= 90) { trophy = '🏆'; label = 'Incroyable ! Champion(ne) !'; }
+  else if (pct >= 70) { trophy = '🥇'; label = 'Excellent ! Bravo !'; }
+  else if (pct >= 50) { trophy = '🥈'; label = 'Bien joué !'; }
+  else if (pct >= 30) { trophy = '🥉'; label = 'C\'est un bon début !'; }
+  document.getElementById('result-trophy').textContent = trophy;
+  document.getElementById('res-label').textContent     = label;
+  if (pct >= 80) launchConfetti();
+
+  saveSession({ correct, total, pct, avgTime:+avgTime, bestStreak:gs.bestStreak,
+    ops:[...new Set(gs.questions.map(q=>q.op))], date:new Date().toISOString() });
+  showPage('results');
+}
+function goHome() { showPage('home'); setHeroEmoji(); }
+
+// ── STORAGE ──────────────────────────────────────────────────
+function saveSession(data) {
+  let h = [];
+  try { h = JSON.parse(localStorage.getItem('mk_history') || '[]'); } catch(e){}
+  h.push(data);
+  if (h.length > 50) h = h.slice(-50);
+  localStorage.setItem('mk_history', JSON.stringify(h));
+}
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem('mk_history') || '[]'); } catch(e){ return []; }
+}
+
+// ── STATS ────────────────────────────────────────────────────
+function renderStats() {
+  const history = loadHistory();
+  const el = document.getElementById('stats-content');
+  if (history.length === 0) {
+    el.innerHTML = `<div class="no-stats"><div class="ns-emoji">📊</div>
+      <p>Pas encore de données.<br>Lance une session pour voir tes statistiques !</p></div>`;
+    return;
+  }
+  const totalQ    = history.reduce((s,h)=>s+h.total,0);
+  const totalC    = history.reduce((s,h)=>s+h.correct,0);
+  const globalPct = Math.round(totalC/totalQ*100);
+  const avgTime   = (history.reduce((s,h)=>s+(h.avgTime||0),0)/history.length).toFixed(1);
+  const bestPct   = Math.max(...history.map(h=>h.pct));
+  const bestStreak = Math.max(...history.map(h=>h.bestStreak||0));
+
+  const opStats = { add:{ok:0,total:0}, sub:{ok:0,total:0}, mul:{ok:0,total:0}, div:{ok:0,total:0} };
+  history.forEach(h => {
+    (h.ops||['add']).forEach(op => {
+      if (opStats[op]) { opStats[op].total++; if(h.pct>=50) opStats[op].ok++; }
+    });
+  });
+  const last10 = history.slice(-10);
+
+  el.innerHTML = `
+    <div class="stats-global">
+      <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-val">${globalPct}%</div><div class="stat-label">Taux global</div></div>
+      <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-val">${history.length}</div><div class="stat-label">Sessions</div></div>
+      <div class="stat-card"><div class="stat-icon">⏱️</div><div class="stat-val">${avgTime}s</div><div class="stat-label">Temps moyen</div></div>
+      <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val">${bestStreak}</div><div class="stat-label">Meilleure série</div></div>
+      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val">${bestPct}%</div><div class="stat-label">Meilleur score</div></div>
+      <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val">${totalC}/${totalQ}</div><div class="stat-label">Bonnes réponses</div></div>
+    </div>
+    <div class="stats-chart-card">
+      <div class="chart-title">📈 Progression (10 dernières sessions)</div>
+      <canvas id="chart-line" height="160"></canvas>
+    </div>
+    <div class="section-title">Par opération</div>
+    <div class="op-stats-grid">
+      ${Object.entries(opStats).map(([op,s]) => {
+        const pct = s.total>0 ? Math.round(s.ok/s.total*100) : 0;
+        const cfg = OP_CONFIG[op];
+        return `<div class="op-stat-card">
+          <div class="op-name" style="color:${cfg.color}">${cfg.emoji} ${cfg.label}</div>
+          <div class="op-pct" style="color:${cfg.color}">${pct}%</div>
+          <div class="op-detail">${s.ok}/${s.total} sessions</div>
+          <div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="stats-chart-card" style="margin-top:14px">
+      <div class="chart-title">📊 Répartition des résultats</div>
+      <canvas id="chart-bar" height="160"></canvas>
+    </div>
+    <button class="clear-btn" onclick="clearStats()">🗑️ Effacer les statistiques</button>
+    <div style="height:20px"></div>
+  `;
+
+  setTimeout(() => {
+    const ctx1 = document.getElementById('chart-line');
+    if (ctx1) {
+      if (chartLine) chartLine.destroy();
+      chartLine = new Chart(ctx1, {
+        type:'line',
+        data:{
+          labels:last10.map((h,i)=>`S${history.length-last10.length+i+1}`),
+          datasets:[{
+            label:'Taux (%)',
+            data:last10.map(h=>h.pct),
+            borderColor:'#6C3CE1',backgroundColor:'rgba(108,60,225,0.15)',
+            borderWidth:2.5,pointBackgroundColor:'#FFD93D',pointRadius:5,
+            fill:true,tension:0.4
+          }]
+        },
+        options:{responsive:true,plugins:{legend:{display:false}},
+          scales:{
+            y:{min:0,max:100,ticks:{color:'#8B7BB0',font:{size:10}},grid:{color:'rgba(255,255,255,0.06)'}},
+            x:{ticks:{color:'#8B7BB0',font:{size:10}},grid:{display:false}}
+          }}
+      });
+    }
+    const ctx2 = document.getElementById('chart-bar');
+    if (ctx2) {
+      if (chartBar) chartBar.destroy();
+      const brackets = [0,0,0,0,0];
+      history.forEach(h => {
+        if      (h.pct<20) brackets[0]++;
+        else if (h.pct<40) brackets[1]++;
+        else if (h.pct<60) brackets[2]++;
+        else if (h.pct<80) brackets[3]++;
+        else               brackets[4]++;
+      });
+      chartBar = new Chart(ctx2, {
+        type:'bar',
+        data:{
+          labels:['<20%','20-40%','40-60%','60-80%','≥80%'],
+          datasets:[{data:brackets,
+            backgroundColor:['#FF6B6B','#FF9F1C','#FFD93D','#4D96FF','#6BCB77'],
+            borderRadius:8,borderSkipped:false}]
+        },
+        options:{responsive:true,plugins:{legend:{display:false}},
+          scales:{
+            y:{ticks:{color:'#8B7BB0',font:{size:10},stepSize:1},grid:{color:'rgba(255,255,255,0.06)'}},
+            x:{ticks:{color:'#8B7BB0',font:{size:10}},grid:{display:false}}
+          }}
+      });
+    }
+  }, 100);
+}
+function clearStats() {
+  if (!confirm('Effacer toutes les statistiques ?')) return;
+  localStorage.removeItem('mk_history');
+  renderStats();
+  showToast('🗑️ Statistiques effacées');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div'); t.id = 'toast';
+    Object.assign(t.style, {
+      position:'fixed',bottom:'80px',left:'50%',transform:'translateX(-50%)',
+      background:'var(--card)',color:'var(--text)',padding:'10px 20px',
+      borderRadius:'12px',fontWeight:'700',fontSize:'14px',zIndex:'300',
+      boxShadow:'0 4px 16px rgba(0,0,0,0.4)',whiteSpace:'nowrap',
+      border:'1px solid rgba(255,255,255,0.1)',transition:'opacity .3s'
+    });
+    document.body.appendChild(t);
+  }
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(t._to);
+  t._to = setTimeout(() => { t.style.opacity='0'; }, 2000);
+}
+
+// ── CONFETTI ─────────────────────────────────────────────────
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const pieces = Array.from({length:80}, () => ({
+    x:Math.random()*canvas.width, y:-10,
+    r:Math.random()*6+3,
+    color:['#FFD93D','#6BCB77','#4D96FF','#FF6B6B','#FF6FF2','#6C3CE1'][Math.floor(Math.random()*6)],
+    vx:Math.random()*4-2, vy:Math.random()*3+2,
+    angle:Math.random()*360, spin:Math.random()*10-5
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.angle*Math.PI/180);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); ctx.restore();
+      p.x+=p.vx; p.y+=p.vy+frame*0.02; p.angle+=p.spin; p.vy+=0.05;
+    });
+    frame++;
+    if (frame<90) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+// ── PWA ──────────────────────────────────────────────────────
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredInstallPrompt = e;
+  document.getElementById('install-banner').style.display = 'flex';
+});
+function installApp() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt=null; dismissInstall(); });
+}
+function dismissInstall() { document.getElementById('install-banner').style.display='none'; }
+window.addEventListener('appinstalled', () => { dismissInstall(); showToast('✅ MathKid installé !'); });
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log(`[NEXXAT MathKid v${APP_VERSION}] © NEXXAT - ODET François 2025 | https://fbt276-cpu.github.io/mathkid/`))
+    .catch(err => console.warn('[MathKid] SW:', err));
+}
+
+init();
+</script>
+</body>
+</html>
