@@ -4,211 +4,242 @@
 **Auteur** : ODET François  
 **Société** : NEXXAT  
 **Copyright** : © NEXXAT - ODET François 2025  
-**Version** : 1.1.0 | Date : 2025-02-28  
+**Version** : 1.2.1 | Date : 2025-02-28  
 **Sourcé par** : Claude IA
+
+---
+
+## Historique des versions
+
+| Version | Date       | Description |
+|---------|------------|-------------|
+| v1.2.1  | 2025-02-28 | Fix Android 16 : position:fixed, -webkit-fill-available, safe-area renforcé |
+| v1.2.0  | 2025-02-28 | GitHub Pages, Bubblewrap TWA, assetlinks.json, twa-manifest.json |
+| v1.1.0  | 2025-02-28 | Conformité guide NEXXAT complète |
+| v1.0.0  | 2025-02-28 | Version initiale |
 
 ---
 
 ## 1. Architecture
 
-MathKid est une **Progressive Web App (PWA) monopage** entièrement statique. Aucun serveur applicatif n'est requis — uniquement un serveur de fichiers statiques (nginx, Apache, GitHub Pages, Python http.server).
-
 ```
-ARCHITECTURE
-─────────────────────────────────────────────
-  Navigateur Android (Chrome / Edge)
+ARCHITECTURE COMPLÈTE
+─────────────────────────────────────────────────────────
+  Utilisateur Android
        │
-       ├── index.html        (HTML + CSS + JS intégré)
-       ├── sw.js             (Service Worker — cache offline)
-       ├── manifest.json     (métadonnées PWA)
-       └── icons/            (icônes 192 et 512px)
-             │
-             ├── LocalStorage  (paramètres + historique 50 sessions)
-             └── CDN externes
-                   ├── Google Fonts (Baloo 2 + Nunito)
-                   └── Chart.js 4.4.0 (graphiques)
+       ├── QR Code → https://fbt276-cpu.github.io/mathkid/
+       │                         │
+       │              ┌──────────┴──────────┐
+       │              │                     │
+       │         Chrome PWA            APK (TWA)
+       │         (installation          com.nexxat.mathkid
+       │          bannière)             (Bubblewrap)
+       │              │                     │
+       └──────────────┴─────────────────────┘
+                      │
+              GitHub Pages (HTTPS)
+              fbt276-cpu.github.io/mathkid/
+                      │
+              ┌───────┴────────┐
+              │                │
+         index.html          sw.js
+         (PWA app)      (Service Worker)
+              │                │
+         localStorage     Cache local
+         (données)        (offline)
 ```
 
 ---
 
 ## 2. Stack technique
 
-| Composant          | Technologie             | Version   |
-|--------------------|-------------------------|-----------|
-| Langage principal  | JavaScript              | ES2022    |
-| Markup             | HTML                    | HTML5     |
-| Styles             | CSS                     | CSS3      |
-| Graphiques         | Chart.js (CDN)          | 4.4.0     |
-| Polices            | Google Fonts (CDN)      | —         |
-| Cache offline      | Service Worker API      | —         |
-| Installation       | Web App Manifest (PWA)  | —         |
-| Persistance        | localStorage            | —         |
-| Icônes             | PNG (192 + 512px)       | —         |
+| Composant | Technologie | Version |
+|-----------|-------------|---------|
+| Langage principal | JavaScript | ES2022 |
+| Markup | HTML | HTML5 |
+| Styles | CSS | CSS3 |
+| Graphiques | Chart.js (CDN) | 4.4.0 |
+| Polices | Google Fonts (CDN) | — |
+| Cache offline | Service Worker API | — |
+| Installation PWA | Web App Manifest | — |
+| Persistance | localStorage | — |
+| APK | Bubblewrap CLI (Google TWA) | 1.24.1 |
+| JDK | OpenJDK | 17.0.11 |
+| Android SDK | Google | API 21+ |
+| Hébergement | GitHub Pages | — |
+| CI/CD | Git + gh CLI | — |
 
 ---
 
 ## 3. Fichiers du projet
 
-| Fichier                                         | Rôle                                        |
-|-------------------------------------------------|---------------------------------------------|
-| `index.html`                                    | Application complète (HTML + CSS + JS)      |
-| `sw.js`                                         | Service Worker — cache-first + offline      |
-| `manifest.json`                                 | Métadonnées PWA (nom, icônes, thème)        |
-| `deploy.sh`                                     | Script Bash de déploiement automatisé       |
-| `icons/icon-192.png`                            | Icône PWA (écran d'accueil Android)         |
-| `icons/icon-512.png`                            | Icône PWA (splash screen Android)           |
-| `Documentation/SPECIFICATIONS_FONCTIONNELLES.md`| Spécifications fonctionnelles               |
-| `Documentation/SPECIFICATIONS_TECHNIQUES.md`   | Ce fichier                                  |
-| `Documentation/MANUEL_UTILISATEUR.md`           | Guide d'utilisation enfant/parent           |
-| `README.md`                                     | Installation, usage, historique versions    |
+| Fichier | Rôle | Versionné |
+|---------|------|-----------|
+| `index.html` | Application PWA complète | ✅ |
+| `sw.js` | Service Worker — cache-first | ✅ |
+| `manifest.json` | Métadonnées PWA | ✅ |
+| `qrcode.html` | Page de distribution QR Code | ✅ |
+| `twa-manifest.json` | Config Bubblewrap APK | ✅ |
+| `deploy_github.sh` | Script déploiement automatisé | ✅ |
+| `.well-known/assetlinks.json` | Liaison APK ↔ site (SHA-256) | ✅ |
+| `icons/icon-192.png` | Icône PWA 192×192 | ✅ |
+| `icons/icon-512.png` | Icône PWA 512×512 | ✅ |
+| `mathkid-release.keystore` | Signature APK | ❌ (.gitignore) |
+| `MathKid-v1.2.0.apk` | APK de distribution | ❌ (.gitignore) |
 
 ---
 
-## 4. Service Worker — Stratégie de cache
+## 4. Hébergement GitHub Pages
 
-**Stratégie** : Cache-first avec fallback réseau
+| Paramètre | Valeur |
+|-----------|--------|
+| Compte | fbt276-cpu |
+| Dépôt | mathkid (public) |
+| Branche | main |
+| Dossier | / (root) |
+| URL PWA | https://fbt276-cpu.github.io/mathkid/ |
+| URL QR Code | https://fbt276-cpu.github.io/mathkid/qrcode.html |
+| URL assetlinks | https://fbt276-cpu.github.io/mathkid/.well-known/assetlinks.json |
+| HTTPS | Automatique (Let's Encrypt via GitHub) |
+
+---
+
+## 5. APK Android (Trusted Web Activity)
+
+| Paramètre | Valeur |
+|-----------|--------|
+| Package | com.nexxat.mathkid |
+| Version name | 1.2.0 |
+| Version code | 1 |
+| Min SDK | API 21 (Android 5.0) |
+| Host | fbt276-cpu.github.io |
+| Start URL | /mathkid/index.html |
+| Keystore | mathkid-release.keystore |
+| Alias | mathkid |
+| SHA-256 | 59:79:51:52:21:3B:8B:EE:20:5C:EF:5E:E0:E5:46:7B:04:8C:4A:E2:BB:16:96:D9:44:0F:FE:A2:12:26:F6:4A |
+| Outil | Bubblewrap CLI v1.24.1 |
+| JDK | OpenJDK 17.0.11 |
+
+---
+
+## 6. Service Worker
+
+**Stratégie** : Cache-first avec fallback réseau  
+**Nom du cache** : `mathkid-nexxat-v1.2.1`
 
 ```
 FETCH → Cache local ?
-  OUI → Retourner depuis le cache (offline OK)
+  OUI → Retourner depuis cache (offline OK)
   NON → Fetch réseau → Mettre en cache → Retourner
-  ERREUR RÉSEAU → Fallback index.html (pour les routes document)
+  ERREUR → Fallback index.html
 ```
 
-**Ressources mises en cache** :
-- Fichiers locaux : index.html, sw.js, manifest.json, icônes
+**Ressources cachées** :
+- Fichiers locaux : index.html, sw.js, manifest.json, icônes, assetlinks.json
 - CDN : Google Fonts, Chart.js 4.4.0
-
-**Nom du cache** : `mathkid-nexxat-v1.1.0`  
-Incrémentation à chaque mise à jour de version.
 
 ---
 
-## 5. Persistance des données (localStorage)
+## 7. Corrections Android 16 (v1.2.1)
 
-| Clé           | Type    | Description                                | Taille max |
-|---------------|---------|--------------------------------------------|------------|
-| `mk_name`     | string  | Prénom de l'enfant                         | 20 chars   |
-| `mk_settings` | JSON    | Paramètres (ops, maxVal, count, timer)     | ~200 bytes |
-| `mk_history`  | JSON[]  | Historique des 50 dernières sessions       | ~10 KB     |
+Problème : la navbar inférieure était coupée sur Android 16.
 
-**Structure d'une session sauvegardée** :
-```json
-{
-  "correct": 8,
-  "total": 10,
-  "pct": 80,
-  "avgTime": 4.2,
-  "bestStreak": 5,
-  "ops": ["add", "mul"],
-  "date": "2025-02-28T10:30:00.000Z"
+**Causes identifiées :**
+- `height: 100vh` ne prend pas en compte la barre système Android 16
+- `overflow: hidden` sur body bloquait le rendu de la navbar
+- `env(safe-area-inset-bottom)` insuffisant seul
+
+**Solutions appliquées :**
+```css
+/* Fix viewport Android 16 */
+html {
+  height: -webkit-fill-available;
+}
+body {
+  position: fixed;
+  width: 100%;
+  min-height: -webkit-fill-available;
+}
+
+/* App shell */
+#app {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+}
+
+/* Navbar renforcée */
+.navbar {
+  padding-bottom: max(env(safe-area-inset-bottom, 8px), 8px);
+  min-height: 60px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Pages */
+.page {
+  flex: 1;
+  overflow: hidden;
 }
 ```
 
 ---
 
-## 6. Générateur de questions
+## 8. Persistance localStorage
 
-### Addition
-```
-a ∈ [0, maxVal]
-b ∈ [0, maxVal]
-réponse = a + b
-```
-
-### Soustraction (sans négatif)
-```
-a ∈ [0, maxVal]
-b ∈ [0, a]         ← garantit a - b ≥ 0
-réponse = a - b
-```
-
-### Multiplication
-```
-a ∈ [0, maxVal]
-b ∈ [0, min(maxVal, 10)]
-réponse = a × b
-```
-
-### Division (entière)
-```
-diviseur b ∈ [1, min(maxVal, 10)]
-quotient q ∈ [0, floor(maxVal / b)]
-dividende a = q × b          ← garantit division exacte
-réponse = q
-```
-
-### Distracteurs (niveau 1)
-```
-pool = {réponse}
-while |pool| < 3:
-  offset = rand(1, max(5, ceil(réponse × 0.4) + 2))
-  candidat = réponse ± offset  (aléatoire)
-  if candidat ≥ 0: pool.add(candidat)
-```
+| Clé | Type | Description | Taille max |
+|-----|------|-------------|------------|
+| `mk_name` | string | Prénom de l'enfant | 20 chars |
+| `mk_settings` | JSON | Paramètres | ~200 bytes |
+| `mk_history` | JSON[] | 50 dernières sessions | ~10 KB |
 
 ---
 
-## 7. Calcul du score
+## 9. Compatibilité
 
-```
-score_question = max(1, round(10 × temps_restant / timer_total))
-```
-- Réponse correcte → bonus ajouté au score total
-- Réponse incorrecte ou timeout → +0
-
----
-
-## 8. Compatibilité
-
-| Plateforme         | Navigateur          | Statut     |
-|--------------------|---------------------|------------|
-| Android 8+         | Chrome 80+          | ✅ Complet  |
-| Android 8+         | Firefox 90+         | ✅ Complet  |
-| Android 8+         | Edge 80+            | ✅ Complet  |
-| iOS 14+            | Safari              | ⚠️ Partiel (PWA limitée sur iOS) |
-| Desktop Linux/Win  | Chrome / Firefox    | ✅ Complet  |
-
-**Prérequis installation PWA** : HTTPS obligatoire (sauf localhost).
+| Plateforme | Navigateur | Statut |
+|-----------|------------|--------|
+| Android 5+ | Chrome 80+ | ✅ Complet |
+| Android 16 | Chrome | ✅ Corrigé v1.2.1 |
+| Android 5+ | Firefox | ✅ Complet |
+| iOS 14+ | Safari | ⚠️ PWA limitée |
+| Desktop Zorin/Linux | Chrome/Firefox | ✅ Complet |
 
 ---
 
-## 9. Sécurité
+## 10. Environnement de développement
 
-- Aucune donnée transmise à un serveur externe
-- Données stockées uniquement en local (localStorage navigateur)
-- Aucune authentification requise
-- Aucun cookie
-- CSP non défini (application statique sans backend)
-
----
-
-## 10. Performance
-
-- Taille totale : < 30 KB (sans polices et Chart.js CDN)
-- Premier chargement : dépend du CDN (~200 KB avec Chart.js)
-- Chargements suivants : 100% offline depuis cache SW
-- Pas de framework JS (Vanilla JS pur) → temps de démarrage < 100ms
+| Outil | Version | Emplacement |
+|-------|---------|-------------|
+| OS | Zorin Linux | PC développement |
+| Node.js | 18.x | `/usr/bin/node` |
+| npm | — | `~/.npm-global/` |
+| Bubblewrap | 1.24.1 | `~/.npm-global/bin/` |
+| JDK | OpenJDK 17 | `~/.bubblewrap/jdk/` |
+| Android SDK | API 21+ | `~/.bubblewrap/android_sdk/` |
+| Git | — | `/usr/bin/git` |
+| gh CLI | — | `/usr/bin/gh` |
+| Projet | — | `~/Bureau/DOSSIER/MATH_KID/` |
+| APK build | — | `~/MathKid-APK/` |
 
 ---
 
-## 11. Déploiement sur Unraid (192.168.1.180)
+## 11. Commandes utiles
 
 ```bash
-# Copier les fichiers sur le serveur
-scp -r MathKid/* root@192.168.1.180:/mnt/user/appdata/mathkid/
+# Mettre à jour et publier
+cd ~/Bureau/DOSSIER/MATH_KID
+git add . && git commit -m "MathKid vX.Y.Z" && git push
 
-# Configuration nginx (conteneur Docker)
-# server {
-#   listen 443 ssl;
-#   root /mnt/user/appdata/mathkid;
-#   index index.html;
-#   location / { try_files $uri $uri/ /index.html; }
-# }
+# Rebuilder l'APK
+cd ~/MathKid-APK && bubblewrap build
+
+# Publier une release
+gh release create vX.Y.Z MathKid-vX.Y.Z.apk --title "MathKid vX.Y.Z NEXXAT"
+
+# Vérifier le keystore
+keytool -list -v -keystore ~/MathKid-APK/mathkid-release.keystore -alias mathkid
 ```
-
-**Prérequis** : Certificat SSL (Let's Encrypt) pour HTTPS.
 
 ---
 
-*© NEXXAT - ODET François 2025 | Sourcé par Claude IA | v1.1.0*
+*© NEXXAT - ODET François 2025 | Sourcé par Claude IA | v1.2.1*
