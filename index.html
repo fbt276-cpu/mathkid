@@ -4,17 +4,19 @@ Nom du programme : MathKid — Application de calcul mental
 Auteur           : ODET François
 Société          : NEXXAT
 Copyright        : © NEXXAT - ODET François 2025
-Version          : 1.2.0
+Version          : 1.2.1
 Date de création : 2025-02-28 10:00
 Langage          : HTML5 / CSS3 / JavaScript ES2022 (PWA)
 Chemin du fichier: https://fbt276-cpu.github.io/mathkid/index.html
 Sourcé par       : Claude IA
 ------------------------------------------------------------
 Historique des versions :
+  v1.2.1 - 2025-02-28 - Correction navbar Android 16 (position:fixed,
+                         -webkit-fill-available, safe-area renforcé)
   v1.2.0 - 2025-02-28 - Intégration GitHub Pages fbt276-cpu,
                          URL absolues, twa-manifest.json,
                          deploy_github.sh, assetlinks.json
-  v1.2.0 - 2025-02-28 - Conformité guide NEXXAT complète :
+  v1.2.1 - 2025-02-28 - Conformité guide NEXXAT complète :
                          en-têtes, bannière démarrage,
                          copyright, chemins, deploy.sh,
                          documentation
@@ -69,13 +71,21 @@ Historique des versions :
       --shadow:    0 8px 32px rgba(0,0,0,0.4);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body {
+    html {
       height: 100%;
+      height: -webkit-fill-available;
+    }
+    body {
+      height: 100%;
+      min-height: -webkit-fill-available;
       font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
       overflow: hidden;
       user-select: none;
+      position: fixed;
+      width: 100%;
+      top: 0; left: 0;
     }
 
     /* ── BACKGROUND STARS ── */
@@ -144,17 +154,19 @@ Historique des versions :
 
     /* ── APP SHELL ── */
     #app {
-      position: relative;
-      height: 100vh;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
       display: flex;
       flex-direction: column;
       z-index: 1;
       max-width: 480px;
       margin: 0 auto;
+      height: 100%;
+      height: -webkit-fill-available;
     }
 
     /* ── PAGES ── */
-    .page { display: none; flex-direction: column; height: 100%; animation: fadeIn .3s ease; }
+    .page { display: none; flex-direction: column; flex: 1; overflow: hidden; animation: fadeIn .3s ease; }
     .page.active { display: flex; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 
@@ -190,7 +202,10 @@ Historique des versions :
       background: var(--surface);
       border-top: 1px solid rgba(255,255,255,0.08);
       flex-shrink: 0;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
+      padding-bottom: max(env(safe-area-inset-bottom, 8px), 8px);
+      min-height: 60px;
+      position: relative;
+      z-index: 10;
     }
     .nav-btn {
       flex: 1;
@@ -616,7 +631,7 @@ Historique des versions :
       <div class="logo">🧮 MathKid</div>
       <div class="copyright">
         <strong>© NEXXAT 2025</strong><br>
-        ODET François · v1.2.0<br>
+        ODET François · v1.2.1<br>
         Sourcé par Claude IA
       </div>
     </div>
@@ -701,7 +716,7 @@ Historique des versions :
   <div class="page" id="page-results">
     <div class="header">
       <div class="logo">🏆 Résultats</div>
-      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.0</div>
+      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.1</div>
     </div>
     <div class="results-scroll">
       <div class="result-hero">
@@ -744,7 +759,7 @@ Historique des versions :
   <div class="page" id="page-stats">
     <div class="header">
       <div class="logo">📊 Statistiques</div>
-      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.0</div>
+      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.1</div>
     </div>
     <div class="stats-scroll" id="stats-content"></div>
     <nav class="navbar">
@@ -760,7 +775,7 @@ Historique des versions :
   <div class="page" id="page-settings">
     <div class="header">
       <div class="logo">⚙️ Réglages</div>
-      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.0</div>
+      <div class="copyright"><strong>© NEXXAT 2025</strong><br>ODET François · v1.2.1</div>
     </div>
     <div class="settings-scroll">
       <div class="settings-card">
@@ -843,17 +858,17 @@ Historique des versions :
    Auteur           : ODET François
    Société          : NEXXAT
    Copyright        : © NEXXAT - ODET François 2025
-   Version          : 1.2.0
+   Version          : 1.2.1
    Date de création : 2025-02-28 10:00
    Langage          : JavaScript ES2022 (Vanilla PWA)
    Chemin du fichier: https://fbt276-cpu.github.io/mathkid/index.html
    Sourcé par       : Claude IA
    ------------------------------------------------------------
    Historique des versions :
-     v1.2.0 - 2025-02-28 - URL GitHub Pages fbt276-cpu,
+     v1.2.1 - 2025-02-28 - URL GitHub Pages fbt276-cpu,
                             twa-manifest.json, assetlinks.json,
                             deploy_github.sh automatisé
-     v1.2.0 - 2025-02-28 - Conformité guide NEXXAT :
+     v1.2.1 - 2025-02-28 - Conformité guide NEXXAT :
                             en-têtes complets, splash NEXXAT,
                             copyright dans tous les affichages,
                             chemins, deploy.sh, documentation
